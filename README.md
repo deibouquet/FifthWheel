@@ -20,7 +20,7 @@ NOTE: As much as I wanted to host this on Stackblitz for convenience, I couldn't
 ## Installation
 
 1. Open terminal
-2. `git clone https://github.com/dqveha/FifthWheel.git`
+2. `git clone https://github.com/deibouquet/FifthWheel.git`
 3. `cd FifthWheel`
 4. `npm install`
 5. `npm run install-both`
