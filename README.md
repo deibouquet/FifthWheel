@@ -20,7 +20,7 @@ NOTE: As much as I wanted to host this on Stackblitz for convenience, I couldn't
 ## Installation
 
 1. Open terminal
-2. `git clone https://github.com/deibouquet/FifthWheel.git`
+2. `git clone https://github.com/dqveha/FifthWheel.git`
 3. `cd FifthWheel`
 4. `npm install`
 5. `npm run install-both`
@@ -28,6 +28,14 @@ NOTE: As much as I wanted to host this on Stackblitz for convenience, I couldn't
 7. View `http://127.0.0.1:5173/` in internet browser
 
 NOTE: Step #5 and #6 uses a dependency called `Concurrently` to run script commands from the different package.json (BE and FE)
+
+#
+
+## Updates
+
+- 02.20.2023:
+  - Update `searchDealershipLotByDetails` function to filter with price points while searching for matching dealership id.
+  - Update datagrid to include error handling and validation for columns with prices.
 
 #
 
@@ -45,4 +53,4 @@ Ideally, a secure JWT exchange would be done to create this exchange without sen
 
 #
 
-### Respectfully Submitted: Dave Lindqvist, 02.06.2023
+### Respectfully Submitted: Dave Lindqvist, 02.20.2023
