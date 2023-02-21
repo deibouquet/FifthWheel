@@ -1,9 +1,36 @@
 const { automobiles } = require("../../data/automobiles");
 const fs = require("fs");
 
-const searchDealershipLotByDetails = (dealershipId, searchTerms) => {
+const searchDealershipLotByDetails = (
+  dealershipId,
+  searchTerms,
+  lowestPricePoint,
+  highestPricePoint,
+  priceType
+) => {
   const currentDealershipLot = automobiles.filter((automobile) => {
-    return Number(automobile.dealershipId) === Number(dealershipId);
+    if (
+      lowestPricePoint &&
+      highestPricePoint &&
+      Number(automobile.dealershipId) === Number(dealershipId)
+    ) {
+      return (
+        Number(automobile[priceType]) > lowestPricePoint &&
+        Number(automobile[priceType]) < highestPricePoint
+      );
+    } else if (
+      lowestPricePoint &&
+      Number(automobile.dealershipId) === Number(dealershipId)
+    ) {
+      return Number(automobile[priceType]) > lowestPricePoint;
+    } else if (
+      highestPricePoint &&
+      Number(automobile.dealershipId) === Number(dealershipId)
+    ) {
+      return Number(automobile[priceType]) < highestPricePoint;
+    } else {
+      return Number(automobile.dealershipId) === Number(dealershipId);
+    }
   });
 
   /**
@@ -34,27 +61,6 @@ const searchDealershipLotByDetails = (dealershipId, searchTerms) => {
     .map(([obj]) => obj);
 
   return foundAutomobiles;
-};
-
-const searchByPrice = (
-  dealershipLot,
-  lowestPricePoint,
-  highestPricePoint,
-  priceType
-) => {
-  let currentSearch;
-  if (lowestPricePoint) {
-    currentSearch = dealershipLot.filter(
-      (automobile) => automobile[priceType] > lowestPricePoint
-    );
-  }
-  if (highestPricePoint) {
-    currentSearch = currentSearch ? currentSearch : dealershipLot;
-    currentSearch = currentSearch.filter(
-      (automobile) => automobile[priceType] < highestPricePoint
-    );
-  }
-  return currentSearch;
 };
 
 const getAutomobile = (dealershipId, id) => {
@@ -115,7 +121,6 @@ const updateAutomobile = (
 };
 
 module.exports = {
-  searchByPrice,
   searchDealershipLotByDetails,
   updateAutomobile,
 };
