@@ -3,7 +3,6 @@ const automobilesRouter = express.Router();
 const { automobiles } = require("../../../data/automobiles");
 const { authentication } = require("../../middleware/auth");
 const {
-  searchByPrice,
   searchDealershipLotByDetails,
   updateAutomobile,
 } = require("../../controller/automobiles");
@@ -13,17 +12,13 @@ automobilesRouter.post("/search", authentication(), (req, res, next) => {
   const { priceType, lowestPricePoint, highestPricePoint } = req.body.data;
   const searchedValues = Object.values(req.body.data?.details);
 
-  let results;
-  results = searchDealershipLotByDetails(dealershipId, searchedValues);
-
-  if ((lowestPricePoint || highestPricePoint) && priceType) {
-    results = searchByPrice(
-      results,
-      lowestPricePoint,
-      highestPricePoint,
-      priceType
-    );
-  }
+  const results = searchDealershipLotByDetails(
+    dealershipId,
+    searchedValues,
+    lowestPricePoint,
+    highestPricePoint,
+    priceType
+  );
 
   res.status(200).send(results);
 });
