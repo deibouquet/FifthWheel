@@ -6,112 +6,6 @@ import Alert from "@mui/material/Alert";
 import { UserContext } from "../utils/UserContext";
 import axios from "axios";
 
-const columns = [
-  {
-    field: "manufacturer",
-    headerName: "Manufacturer",
-    width: "100",
-    editable: true,
-  },
-  {
-    field: "model",
-    headerName: "Model",
-    width: "100",
-    editable: true,
-  },
-  {
-    field: "type",
-    headerName: "Type",
-    width: "170",
-    editable: true,
-  },
-  {
-    field: "fuel",
-    headerName: "Fuel",
-    width: "100",
-    editable: true,
-    valueGetter: (params) =>
-      `${params.row.fuel
-        .toLowerCase()
-        .split(" ")
-        .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
-        .join(" ")}`,
-  },
-  {
-    field: "vin",
-    headerName: "VIN",
-    width: "190",
-    editable: true,
-  },
-  {
-    field: "color",
-    headerName: "Color",
-    width: "100",
-    editable: true,
-    valueGetter: (params) =>
-      `${params.row.color
-        .toLowerCase()
-        .split(" ")
-        .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
-        .join(" ")}`,
-  },
-  {
-    field: "purchase_price",
-    headerName: "Purchase Price",
-    width: "130",
-    editable: true,
-    valueGetter: (params) => `$${params.row.purchase_price}`,
-  },
-  {
-    field: "sale_price",
-    headerName: "Sale Price",
-    width: "100",
-    editable: true,
-    valueGetter: (params) => `$${params.row.sale_price}`,
-  },
-  {
-    field: "msrp",
-    headerName: "MSRP",
-    width: "100",
-    editable: true,
-    valueGetter: (params) => `$${params.row.msrp}`,
-  },
-  {
-    field: "condition",
-    headerName: "Condition",
-    width: "100",
-    editable: true,
-    type: "singleSelect",
-    valueOptions: [
-      "Totalled",
-      "Rough",
-      "Heavily",
-      "Mostly Works",
-      "Lightly Used",
-      "Like New",
-      "New",
-    ],
-    valueGetter: (params) =>
-      `${params.row.condition
-        .toLowerCase()
-        .split(" ")
-        .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
-        .join(" ")}`,
-  },
-  {
-    field: "dealershipName",
-    headerName: "Dealership",
-    width: "170",
-    editable: true,
-    valueGetter: (params) =>
-      `${params.row.dealershipName
-        .toLowerCase()
-        .split(" ")
-        .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
-        .join(" ")}`,
-  },
-];
-
 export default function DataGridAutomobiles({ automobiles }) {
   const { userProfile } = React.useContext(UserContext);
   const [snackbar, setSnackbar] = React.useState(null);
@@ -170,6 +64,179 @@ export default function DataGridAutomobiles({ automobiles }) {
   const handleProcessRowUpdateError = React.useCallback((error) => {
     setSnackbar({ children: error.message, severity: "error" });
   }, []);
+
+  const columns = [
+    {
+      field: "manufacturer",
+      headerName: "Manufacturer",
+      width: "100",
+      editable: true,
+    },
+    {
+      field: "model",
+      headerName: "Model",
+      width: "100",
+      editable: true,
+    },
+    {
+      field: "type",
+      headerName: "Type",
+      width: "170",
+      editable: true,
+    },
+    {
+      field: "fuel",
+      headerName: "Fuel",
+      width: "100",
+      editable: true,
+      valueGetter: (params) =>
+        `${params.row.fuel
+          .toLowerCase()
+          .split(" ")
+          .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+          .join(" ")}`,
+    },
+    {
+      field: "vin",
+      headerName: "VIN",
+      width: "190",
+      editable: true,
+    },
+    {
+      field: "color",
+      headerName: "Color",
+      width: "100",
+      editable: true,
+      valueGetter: (params) =>
+        `${params.row.color
+          .toLowerCase()
+          .split(" ")
+          .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+          .join(" ")}`,
+    },
+    {
+      field: "purchase_price",
+      headerName: "Purchase Price",
+      width: "130",
+      editable: true,
+      valueFormatter: (params) => {
+        return `$${params.value}`;
+      },
+      valueParser: (value) => {
+        // return Number(value);
+        return value;
+      },
+      preProcessEditCellProps: (params) => {
+        let hasError;
+        if (params.props.value < 0) {
+          hasError = true;
+          setSnackbar({
+            children: "[Purchase Price] - Must be a positive number",
+            severity: "error",
+          });
+        }
+        if (isNaN(params.props.value)) {
+          hasError = true;
+          setSnackbar({
+            children: "[Purchase Price] - Numbers only",
+            severity: "error",
+          });
+        }
+        return { ...params.props, error: hasError };
+      },
+    },
+    {
+      field: "sale_price",
+      headerName: "Sale Price",
+      width: "100",
+      editable: true,
+      valueFormatter: (params) => {
+        return `$${params.value}`;
+      },
+      valueParser: (value) => {
+        return Number(value);
+      },
+      preProcessEditCellProps: (params) => {
+        let hasError;
+        if (params.props.value < 0) {
+          hasError = true;
+          setSnackbar({
+            children: "[Sale Price] - Must be a positive number",
+            severity: "error",
+          });
+        }
+        if (isNaN(params.props.value)) {
+          hasError = true;
+          setSnackbar({
+            children: "[Sale Price] - Numbers only",
+            severity: "error",
+          });
+        }
+        return { ...params.props, error: hasError };
+      },
+    },
+    {
+      field: "msrp",
+      headerName: "MSRP",
+      width: "100",
+      editable: true,
+      valueFormatter: (params) => {
+        return `$${params.value}`;
+      },
+      valueParser: (value) => {
+        return Number(value);
+      },
+      preProcessEditCellProps: (params) => {
+        let hasError;
+        if (params.props.value < 0) {
+          hasError = true;
+          setSnackbar({
+            children: "[MSRP] - Must be a positive number",
+            severity: "error",
+          });
+        }
+        if (isNaN(params.props.value)) {
+          hasError = true;
+          setSnackbar({ children: "[MSRP] - Numbers only", severity: "error" });
+        }
+        return { ...params.props, error: hasError };
+      },
+    },
+    {
+      field: "condition",
+      headerName: "Condition",
+      width: "100",
+      editable: true,
+      type: "singleSelect",
+      valueOptions: [
+        "Totalled",
+        "Rough",
+        "Heavily",
+        "Mostly Works",
+        "Lightly Used",
+        "Like New",
+        "New",
+      ],
+      valueGetter: (params) =>
+        `${params.row.condition
+          .toLowerCase()
+          .split(" ")
+          .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+          .join(" ")}`,
+    },
+    {
+      field: "dealershipName",
+      headerName: "Dealership",
+      width: "170",
+      editable: true,
+      valueGetter: (params) =>
+        `${params.row.dealershipName
+          .toLowerCase()
+          .split(" ")
+          .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+          .join(" ")}`,
+    },
+  ];
 
   return (
     <>
