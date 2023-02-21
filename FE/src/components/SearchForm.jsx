@@ -130,10 +130,7 @@ export default function SearchForm() {
           This is due to the limitation of how I implemented the authentication
           middleware.
         </p>
-        <p>
-          Edits can be made into the datagrid by double clicking on one of the
-          row datas and updating within there.
-        </p>
+        <p>Datagrid allows for edits by double-clicking into the row.</p>
         <p>
           Columns can be sorted and filtered at the header. Unfortunately, the
           buttons' UI for the sorting isn't optimal but it is functional.
